@@ -1,0 +1,96 @@
+//Log.i(Prefs.TAG, "Overriding the command with hard coded command");
+					//commandStr = "ffmpeg -y -i /sdcard/videokit/in.m4v -vf transpose=1 -s 160x120 -r 30 -aspect 4:3 -ab 48000 -ac 2 -ar 22050 -b 2097k /sdcard/videokit/vid_trans.mp4";
+					
+					//commandStr = "ffmpeg -y -i /sdcard/videokit/in.mp4 /sdcard/videokit/out.mp4";
+					//commandStr = "ffmpeg -i /sdcard/videokit/in.mp4 -b:v 2097k \"/sdcard/videokit/out.mp4\"";
+					//commandStr = "ffmpeg -formats";
+					//commandStr = "ffmpeg -y -i /sdcard/videokit/in.mp4 -strict experimental -vf transpose=1 -s 160x120 -r 30 -aspect 4:3 -ab 48000 -ac 2 -ar 22050 -b 2097k /sdcard/videokit/vid_trans.mp4";
+					
+					// not woring
+					//commandStr = "ffmpeg -y -r 1/5 -i /sdcard/videokit/pic00%d.jpg -loop_input -shortest -i in.mp3 -acodec copy /sdcard/videokit/out.avi";
+					
+					// working, fade is from the first frame till the 5th
+					//commandStr = "ffmpeg -y -r 1/5 -i /sdcard/videokit/pic00%d.jpg -shortest -i /sdcard/videokit/in.mp3 -acodec copy -vf fade=in:0:5 /sdcard/videokit/out.avi";
+					
+					// working but I can't see any result
+					//commandStr = "ffmpeg -y -r 1/5 -i /sdcard/videokit/pic00%d.jpg -shortest -i /sdcard/videokit/in.mp3 -acodec copy -vf fade=in:0:25 -vf fade=out:175:25 /sdcard/videokit/out.avi";
+					
+					//not working
+					//commandStr = "ffmpeg -y -r 1/5 -i /sdcard/videokit/pic00%d.jpg -shortest -i /sdcard/videokit/in.mp3 -acodec copy -vf fade=t=in:st=2.5:d=1.5 /sdcard/videokit/out.avi";
+					
+					//commandStr = "ffmpeg -y -r 1/5 -i /sdcard/videokit/pic00%d.jpg -shortest -i /sdcard/videokit/in.mp3 -acodec copy -vf fade=slide:0:3 /sdcard/videokit/out.avi";
+					
+					// working but it seems like its in secs not frames
+					//commandStr = "ffmpeg -y -r 1/5 -i /sdcard/videokit/pic00%d.jpg -shortest -i /sdcard/videokit/in.mp3 -acodec copy -vf fade=in:0:10 /sdcard/videokit/out.avi";
+					
+					//working the best
+					//commandStr = "ffmpeg -y -r 1/5 -i /sdcard/videokit/pic%d.jpg -shortest -i /sdcard/videokit/in.mp3 -acodec copy -vf fade=in:0:5 /sdcard/videokit/out.avi";
+					
+					// working and looks awesome! (on n7 and gs1)
+					//commandStr = "ffmpeg -y -i /sdcard/videokit/in.mp4 -acodec copy -vf fade=in:0:5 /sdcard/videokit/out.mp4";
+					
+					//commandStr = "ffmpeg -y -r 1/5 -i /sdcard/videokit/pic00%d.jpg -vf fade=in:0:10 /sdcard/videokit/out.avi";
+					
+					//commandStr = "ffmpeg -i /sdcard/videokit/in.mp4 -aspect 1:1 -vf split [main][tmp];[tmp] crop=iw/2:ih:0:0, hflip[tp],[tp] pad=2*iw[left]; [main] crop=iw/2:ih:iw/2:0[right]; [left][right] overlay=W/2 -vb 20M -r 23.956 /sdcard/videokit/outs.mp4";
+					
+					// works
+					//commandStr = "ffmpeg -y -i /sdcard/videokit/in.mp4 -strict experimental /sdcard/videokit/out.mp4";
+					
+					// using the ” charecter is not working
+					//commandStr = "ffmpeg -i /sdcard/videokit/in.mp4 -aspect 1:1 -vf split \"[main][tmp];[tmp] crop=iw/2:ih:0:0, hflip[tp],[tp] pad=2*iw[left]; [main] crop=iw/2:ih:iw/2:0[right]; [left][right] overlay=W/2\" -vb 20M -r 23.956 /sdcard/videokit/outs.mp4";
+					
+					// not working crash
+					//commandStr = "ffmpeg -i /sdcard/videokit/in.mp3 -i /sdcard/videokit/in.mp3 -i /sdcard/videokit/in.mp3 -filter_complex amix=inputs=3:duration=first:dropout_transition=3 /sdcard/videokit/out1.mp3";
+					
+					// works, but does not merge the videos
+					//commandStr = "ffmpeg -y -i /sdcard/videokit/in.mp4 -i /sdcard/videokit/vid_trans.mp4 -strict experimental -filter_complex join=inputs=2 /sdcard/videokit/out_join.mp4";
+					
+					//commandStr = "ffmpeg -i /sdcard/videokit/in.mp4 -i /sdcard/videokit/vid_trans.mp4 -filer_complex '[0:0] [0:1] [1:0] [1:1] concat=n=2:v=1:a=1 [v] [a]' -map '[v]' -map '[a]' output.mkv";
+					
+					// not working, unrecognized option -filer_complex
+					//String[] complexCommand = {"ffmpeg","-i", "/sdcard/videokit/in.mp4", "-i", "/sdcard/videokit/vid_trans.mp4", "-filer_complex", "[0:0] [0:1] [1:0] [1:1] concat=n=2:v=1:a=1 [v] [a]", "-map", "[v]", "-map", "[a]", "/sdcard/videokit/output.mkv"};
+					
+					
+					//commandStr = "ffmpeg -i /sdcard/videokit/in.mp4 -aspect 1:1 -vf split \"[main][tmp];[tmp] crop=iw/2:ih:0:0, hflip[tp],[tp] pad=2*iw[left]; [main] crop=iw/2:ih:iw/2:0[right]; [left][right] overlay=W/2\" -vb 20M -r 23.956 /sdcard/videokit/outs.mp4";
+					//String[] complexCommand = {"ffmpeg","-y", "-i", "/sdcard/videokit/in.mp4","-strict","experimental", "-aspect", "1:1", "-vf", "split [main][tmp];[tmp] crop=iw/2:ih:0:0, hflip[tp],[tp] pad=2*iw[left]; [main] crop=iw/2:ih:iw/2:0[right]; [left][right] overlay=W/2", "-vb", "20M", "-r", "23.956", "/sdcard/videokit/outs.mp4"};
+					
+					// not working
+					//commandStr = "ffmpeg -f lavfi -i "movie=midr-mjpeg.mov,redact=redact_unsort.txt" -f lavfi -i "amovie=midr-mjpeg.mov,aredact=aredact_unsort.txt" -acodec copy -vcodec copy -y /sdcard/output.mov";
+					//String[] complexCommand = {"ffmpeg","-f", "lavfi","-i", "\"movie=midr-mjpeg.mov,redact=redact_unsort.txt\"", "-f", "lavfi", "-i", "\"amovie=midr-mjpeg.mov,aredact=aredact_unsort.txt\"", "-acodec", "copy", "-y", "/sdcard/output.mov"};
+					
+					
+					// working!
+					//String[] complexCommand = {"ffmpeg","-i", "/sdcard/videokit 2/in.mp4"};
+					
+					// working as complex commad!
+					//commandStr = "ffmpeg -y -i /sdcard/videokit/in.mp4 -acodec copy -vf fade=in:0:5 /sdcard/videokit/out.mp4";
+					//String[] complexCommand = {"ffmpeg","-i", "/sdcard/videokit 2/in.mp4", "-acodec", "copy", "-vf", "fade=in:0:5", "/sdcard/videokit 2/out.mp4"};
+					
+					// fucking works!!!!
+					//commandStr = "ffmpeg -i in2.mp4 -vf \"crop=iw/2:ih:0:0,split[tmp],pad=2*iw[left]; [tmp]hflip[right]; [left][right] overlay=W/2\" -vb 20M -r 23.956 outs.mp4";
+					//String[] complexCommand = {"ffmpeg","-y" ,"-i", "/sdcard/videokit/in.mp4","-strict","experimental", "-vf", "crop=iw/2:ih:0:0,split[tmp],pad=2*iw[left]; [tmp]hflip[right]; [left][right] overlay=W/2", "-vb", "20M", "-r", "23.956", "/sdcard/videokit/out.mp4"};
+					
+					// works mp3 support!
+					//commandStr = "ffmpeg -y -i /sdcard/videokit/in.mp4 -vn -ar 44100 -ac 2 -ab 128k -f mp3 /sdcard/videokit/in.mp3";
+					
+					// ffmpeg -i INPUT -vf "split [main][tmp]; [tmp] crop=iw:ih/2:0:0, vflip [flip]; [main][flip] overlay=0:H/2" OUTPUT
+					//String[] complexCommand = {"ffmpeg","-y" ,"-i", "/sdcard/videokit/in.mp4","-strict","experimental", "-vf", "split [main][tmp]; [tmp] crop=iw:ih/2:0:0, vflip [flip]; [main][flip] overlay=0:H/2", "-vb", "20M", "-r", "23.956", "/sdcard/videokit/out.mp4"};
+					
+					// works great better performance no crash
+					//commandStr = "ffmpeg -y -i /sdcard/videokit/mo.mkv -strict experimental -s 320x240 -r 30 -aspect 3:4 -ab 48000 -ac 2 -ar 22050 -vcodec mpeg4 -b 2097152 /sdcard/videokit/out.mp4";
+					
+					// vintage filter
+					commandStr = "ffmpeg -y -i /sdcard/videokit/in.mp4 -strict experimental -vf curves=vintage -s 640x480 -r 30 -aspect 4:3 -ab 48000 -ac 2 -ar 22050 -b 2097k -vcodec mpeg4 /sdcard/videokit/curve.mp4";
+					
+					// fade in and out transition.
+					String[] complexCommand = {"ffmpeg","-y" ,"-i", "/sdcard/videokit/in.m4v","-acodec", "copy", "-vf", "fade=t=in:st=0:d=5, fade=t=out:st=20:d=5", "/sdcard/videokit/out.mp4"};
+					//
+					
+					// works!!! join 2 files using filter_complex
+					//String[] complexCommand = {"ffmpeg","-y","-i", "/sdcard/videokit/in1.mp4", "-i", "/sdcard/videokit/in2.mp4", "-strict","experimental", "-filter_complex", "[0:0] [0:1] [1:0] [1:1] concat=n=2:v=1:a=1", "/sdcard/videokit/out.mp4"};
+
+					
+					// filter with sample.mp4 that use mpeg4 codec works very fast and finish in less then one minute
+					String[] complexCommand = {"ffmpeg","-threads", "0", "-y" ,"-i", "/sdcard/videokit/sample.mp4","-strict","experimental", "-vf", "crop=iw/2:ih:0:0,split[tmp],pad=2*iw[left]; [tmp]hflip[right]; [left][right] overlay=W/2", "-vcodec", "mpeg4", "-vb", "20M", "-r", "23.956", "/sdcard/videokit/out.mp4"};
+					
+					
