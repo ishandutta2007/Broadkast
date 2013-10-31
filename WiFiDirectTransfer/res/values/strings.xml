@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">WiFiDirectTransfer</string>
+    <string name="action_settings">Settings</string>
+    <string name="enter_message">Enter message here</string>
+	<string name="send_message">Send Message</string>
+	<string name="connectToDevice">Connect to Device</string>
+	<string name="register_service">Register Service</string>
+	<string name="discover_service">Discover Service</string>
+    
+</resources>
