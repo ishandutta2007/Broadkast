@@ -1,0 +1,7 @@
+This readme briefly covers the /screenshot/, /ffmpeg4android/ and /ffmpeg4android_client_app/ projects.
+
+ffmpeg4android is a folder of an eclipse project for the ffmpeg4android library.  It is necessary for either screenshot or client_app to work.
+
+the client_app directory contains the demo client that uses ffmpeg4android library.  To run it, you must first build the ffmpeg4android library, and then include this library in your build path for client_app.
+
+the screenshot app is a currently non functional attemp at reading the framebuffer and converting it to a .png file.  To run, you also need to build ffmpeg4android, and add it to the build path.  A working version should not look much different, I think it's mainly my file paths that are messed up.
