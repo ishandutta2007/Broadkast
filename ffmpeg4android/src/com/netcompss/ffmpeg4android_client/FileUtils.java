@@ -190,8 +190,8 @@ public class FileUtils {
 	
 	public static String convertPathToNoSpacePath(String path) {
 		String validFileName = getValidFFMpgegFileNameFromPath(path);
-		String noSpacesValid = "/sdcard/videokit/" + validFileName;
-		int result = (new SymLink()).createSymLink(path, "/sdcard/videokit/" + validFileName);
+		String noSpacesValid = "/mnt/sdcard/videokit/" + validFileName;
+		int result = (new SymLink()).createSymLink(path, "/mnt/sdcard/videokit/" + validFileName);
 		if (result != -1) {
 			Log.d(Prefs.TAG, "SymLink creation OK: " + noSpacesValid);
 			return noSpacesValid;
