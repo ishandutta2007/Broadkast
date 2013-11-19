@@ -37,8 +37,7 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver{
             }
         }
     	else if (WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION.equals(action)) {
-    		// Request peers
-    		activity.requestPeers();
+    			// TODO
     	}
     	else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
     		
@@ -48,12 +47,9 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver{
 
             NetworkInfo networkInfo = (NetworkInfo) intent
                     .getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
-
-            activity.printMessage("In CONNECTION CHANGED, networkInfo.isConnected = " + 
-            		networkInfo.isConnected());
             
             if (networkInfo.isConnected()) {
-
+            	activity.printMessage("Connected to a device");
                 // we are connected with the other device, request connection
                 // info to find group owner IP
                 manager.requestConnectionInfo(channel, (ConnectionInfoListener) activity);

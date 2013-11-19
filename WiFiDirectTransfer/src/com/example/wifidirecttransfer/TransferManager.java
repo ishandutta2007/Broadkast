@@ -5,66 +5,82 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
-import android.widget.Toast;
+import android.widget.EditText;
 
 public class TransferManager implements Runnable {
 
 
-    private Socket socket = null;
-    private WiFiDirectActivity activity;
-    
-    public TransferManager(Socket socket, WiFiDirectActivity activity) {
-        this.socket = socket;
-        this.activity = activity;
-    }
+	private Socket socket = null;
+	WiFiDirectActivity activity;
 
-    private InputStream iStream;
-    private OutputStream oStream;
+	public TransferManager(Socket socket, WiFiDirectActivity activity) {
+		this.activity = activity;
+		this.socket = socket;
+	}
 
-    @Override
-    public void run() {
-        try {
+	private InputStream iStream;
+	private OutputStream oStream;
 
-            iStream = socket.getInputStream();
-            oStream = socket.getOutputStream();
-            byte[] buffer = new byte[1024];
-            int bytes;
+	@Override
+	public void run() {
+		try {
+			activity.runOnUiThread(new Runnable(){	            	
+				@Override
+				public void run(){
+					activity.printMessage("In transfer manager!");
+				}
+			});
 
-            String message = new String();
-            
-            while (true) {
-                try {
-                    // Read from the InputStream
-                    bytes = iStream.read(buffer);
-                    if (bytes == -1) {
-                        break;
-                    }
-                    message = message + new String(buffer, 0, bytes);
+			iStream = socket.getInputStream();
+			oStream = socket.getOutputStream();
+			byte[] buffer = new byte[1024];
+			int bytes;
+			oStream.write(new String("This is a test message from server").getBytes());
 
-                } catch (IOException e) {
-                	
-                }
-            }
-            
-            Toast.makeText(activity, message, Toast.LENGTH_LONG);
-            
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                socket.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+			String message = new String();
 
-    public void write(byte[] buffer) {
-        try {
-            oStream.write(buffer);
-        } catch (IOException e) {
+			while (true) {
+				try {
+					// Read from the InputStream
+					bytes = iStream.read(buffer);
+					if (bytes == -1) {
+						break;
+					}
+					message = new String(buffer, 0, bytes);
 
-        }
-    }
-	
+					final String printMessage = new String(message);
+
+					activity.runOnUiThread(new Runnable(){	            	
+						@Override
+						public void run(){
+							if(printMessage != null){
+								activity.printMessage(printMessage);
+							}
+						}
+					});                    
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				socket.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public void write(byte[] buffer) {
+		try {
+			oStream.write(buffer);
+		} catch (IOException e) {
+
+		}
+	}
+
 }

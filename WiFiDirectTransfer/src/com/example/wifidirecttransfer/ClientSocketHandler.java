@@ -24,6 +24,7 @@ public class ClientSocketHandler extends Thread{
                     WiFiDirectActivity.SERVER_PORT), 5000);
             transfer = new TransferManager(socket, activity);
             new Thread(transfer).start();
+            
         } catch (IOException e) {
             e.printStackTrace();
             try {

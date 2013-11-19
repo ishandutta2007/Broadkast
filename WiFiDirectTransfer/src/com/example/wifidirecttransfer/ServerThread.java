@@ -6,26 +6,24 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-public class ServerSocketHandler extends Thread {
 
-	ServerSocket socket = null;
-    private final int THREAD_COUNT = 10;
+public class ServerThread implements Runnable{
 
-    private WiFiDirectActivity activity;
+	private ServerSocket socket;
+	private WiFiDirectActivity activity;
+	private final int THREAD_COUNT = 10;
 
-    public ServerSocketHandler(WiFiDirectActivity activity) throws IOException {
-    	this.activity = activity;
-        try {
+	public ServerThread(WiFiDirectActivity activity) {
+		this.activity = activity;
+		try {
             socket = new ServerSocket(WiFiDirectActivity.SERVER_PORT);
         } catch (IOException e) {
-            e.printStackTrace();
-            pool.shutdownNow();
-            throw e;
+        	e.printStackTrace();
+        	pool.shutdown();
         }
-
-    }
-
-    /**
+	}
+	
+	/**
      * A ThreadPool for client sockets.
      */
     private final ThreadPoolExecutor pool = new ThreadPoolExecutor(
@@ -33,12 +31,19 @@ public class ServerSocketHandler extends Thread {
             new LinkedBlockingQueue<Runnable>());
 
     @Override
-    public void run() {
-        while (true) {
+	public void run() {
+		while (true) {
             try {
-                // A blocking operation. Initiate a TransferManager instance when
+                // A blocking operation. Initiate a ChatManager instance when
                 // there is a new connection
+            	
                 pool.execute(new TransferManager(socket.accept(), activity));
+                activity.runOnUiThread(new Runnable(){	            	
+                	@Override
+                	public void run(){
+                		activity.printMessage("Started a server socket. Pool executing:" + pool.getActiveCount());
+                	}
+                });
 
             } catch (IOException e) {
                 try {
@@ -52,6 +57,8 @@ public class ServerSocketHandler extends Thread {
                 break;
             }
         }
-    }
-	
+	}
+
+
 }
+

@@ -1,6 +1,5 @@
 package com.example.wifidirecttransfer;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,9 +7,9 @@ import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.IntentFilter;
+import android.net.wifi.WpsInfo;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
-import android.net.wifi.p2p.WifiP2pDeviceList;
 import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.ActionListener;
@@ -29,6 +28,8 @@ import android.widget.Toast;
 
 public class WiFiDirectActivity extends Activity implements ConnectionInfoListener{
 
+	private Thread socketThread;
+	
 	private final String SERVICE_NAME = "test";
 	static final int SERVER_PORT = 7878;
 
@@ -37,13 +38,13 @@ public class WiFiDirectActivity extends Activity implements ConnectionInfoListen
 	private BroadcastReceiver receiver;
 	private IntentFilter intentFilter;
 	private WifiP2pDnsSdServiceRequest serviceRequest;
-	
-	private TransferManager transfer;
 
 	private boolean isWifiP2pEnabled = false;
 
 	// Service Info
 	private WifiP2pDevice serviceDevice;
+
+	private WifiP2pInfo p2pInfo;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
@@ -84,72 +85,56 @@ public class WiFiDirectActivity extends Activity implements ConnectionInfoListen
 		isWifiP2pEnabled = enabled;
 		Toast.makeText(WiFiDirectActivity.this, "isEnabled = true",
 				Toast.LENGTH_SHORT).show();
-		findPeers();
-	}
-
-	protected void findPeers(){
-		manager.discoverPeers(channel, new WifiP2pManager.ActionListener() {
-			@Override
-			public void onSuccess() {
-				Toast.makeText(WiFiDirectActivity.this, "Success",
-						Toast.LENGTH_SHORT).show();
-				requestPeers();
-			}
-
-			@Override
-			public void onFailure(int reasonCode) {
-				Toast.makeText(WiFiDirectActivity.this, "Failure",
-						Toast.LENGTH_SHORT).show();
-			}
-		});
-	}
-
-	protected void requestPeers(){
-		Toast.makeText(this, "RequestPeers",
-				Toast.LENGTH_LONG).show();
-
-		manager.requestPeers(channel, new TestPeerListListener(this));
 	}
 
 
 	public void sendMessage(View view){	
 		EditText editText = (EditText) findViewById(R.id.edit_message);
 
-		if (transfer != null){
-			transfer.write(editText.getText().toString().getBytes());
-			editText.setText("Sent message");
+		boolean ready = p2pInfo != null && p2pInfo.groupFormed;
+		
+		if (ready)
+			printMessage(p2pInfo.isGroupOwner + " " + p2pInfo.groupOwnerAddress.getHostAddress() + p2pInfo.groupFormed);
+		
+		if (ready && !p2pInfo.isGroupOwner){
+			socketThread = new Thread(new ClientThread(p2pInfo.groupOwnerAddress, this));
+			socketThread.start();
 		}
 		else{
 			editText.setText("Could Not send message");
+			if (ready && p2pInfo.isGroupOwner){
+				socketThread = new Thread(new ServerThread(this));
+				socketThread.start();
+			}
 		}
 	}
 
 	public void connectToDevice(View view){
 
-
+		if(serviceDevice == null){
+			printMessage("No devices have been found.");
+			return;
+		}
+		
 		TextView textView = (TextView) findViewById(R.id.text_message);
 
 		textView.setText("Connecting to " + serviceDevice.deviceName);
 
 		WifiP2pConfig config = new WifiP2pConfig();
 		config.deviceAddress = serviceDevice.deviceAddress;
-		//config.wps.setup = WpsInfo.PBC;
+		config.wps.setup = WpsInfo.PBC;
 		if (serviceRequest != null)
 			manager.removeServiceRequest(channel, serviceRequest,
 					new ActionListener() {
 
 				@Override
 				public void onSuccess() {
-					TextView textView = (TextView) findViewById(R.id.text_message);
-
-					textView.setText("Connected to " + serviceDevice.deviceName);
+					//
 				}
 
 				@Override
 				public void onFailure(int arg0) {
-					TextView textView = (TextView) findViewById(R.id.text_message);
-
-					textView.setText("Could not connect to " + serviceDevice.deviceName);
+					//
 				}
 			});
 
@@ -157,12 +142,12 @@ public class WiFiDirectActivity extends Activity implements ConnectionInfoListen
 
 			@Override
 			public void onSuccess() {
-
+				printMessage("Connected to device successfully");
 			}
 
 			@Override
 			public void onFailure(int errorCode) {
-
+				printMessage("Failed to connect to device");
 			}
 		});
 	}
@@ -172,7 +157,7 @@ public class WiFiDirectActivity extends Activity implements ConnectionInfoListen
 		record.put("available", "visible");
 
 		WifiP2pDnsSdServiceInfo service = WifiP2pDnsSdServiceInfo.newInstance(
-				SERVICE_NAME, "presence._tcp", record);
+				SERVICE_NAME, "_presence._tcp", record);
 		manager.addLocalService(channel, service, new ActionListener() {
 
 			@Override
@@ -187,6 +172,8 @@ public class WiFiDirectActivity extends Activity implements ConnectionInfoListen
 				editText.setText("Didn't register service");
 			}
 		});
+		
+		respondToDiscoverService(view);
 	}
 
 	public void respondToDiscoverService(View view){
@@ -261,37 +248,17 @@ public class WiFiDirectActivity extends Activity implements ConnectionInfoListen
 
 	@Override
 	public void onConnectionInfoAvailable(WifiP2pInfo p2pInfo) {
-		printMessage("InOnConnectionInfoAvailable");
-		
-		Thread handler = null;
-        /*
-         * The group owner accepts connections using a server socket and then spawns a
-         * client socket for every client. This is handled by {@code
-         * GroupOwnerSocketHandler}
-         */
+		printMessage("group formed = " + p2pInfo.groupFormed + ", owner address = "
+				+  p2pInfo.groupOwnerAddress.getHostAddress() + ", Is group owner = " +  p2pInfo.isGroupOwner);
 
-        if (p2pInfo.isGroupOwner) {
-            try {
-                handler = new ServerSocketHandler(this);
-                handler.start();
-            } catch (IOException e) {
-                return;
-            }
-        } else {
-            handler = new ClientSocketHandler(p2pInfo.groupOwnerAddress, this);
-            handler.start();
-        }
-
-    }
-	
-	public void setTransferManager(TransferManager transfer){
-		this.transfer = transfer;
+		this.p2pInfo = p2pInfo;
 	}
+
 
 	public void printMessage(String message){
 		TextView textView = (TextView) findViewById(R.id.text_message);
 
 		textView.setText(message);
 	}
-	
+
 }
