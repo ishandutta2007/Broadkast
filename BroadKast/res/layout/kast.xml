@@ -12,14 +12,6 @@
         android:text="@string/welcomekast"
         android:textColor="#FFFFFF" />
 
-    <ImageButton
-        android:id="@+id/back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="125dp"
-        android:layout_marginRight="24dp"
-        android:onClick="BackButton"
-        android:scaleType="fitXY"
-        android:src="@drawable/backbutton" />
+    
 
 </LinearLayout>

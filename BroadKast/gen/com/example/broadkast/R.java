@@ -26,15 +26,16 @@ public final class R {
         public static final int ic_launcher=0x7f020002;
         public static final int kastbutton=0x7f020003;
         public static final int menubutton=0x7f020004;
-        public static final int viewbutton=0x7f020005;
+        public static final int orangewifi=0x7f020005;
+        public static final int viewbutton=0x7f020006;
     }
     public static final class id {
         public static final int action_settings=0x7f080005;
-        public static final int back=0x7f080004;
-        public static final int button1=0x7f080003;
-        public static final int button2=0x7f080001;
-        public static final int button3=0x7f080002;
-        public static final int textView1=0x7f080000;
+        public static final int button1=0x7f080004;
+        public static final int button2=0x7f080002;
+        public static final int button3=0x7f080003;
+        public static final int imageView1=0x7f080000;
+        public static final int textView1=0x7f080001;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;

@@ -13,11 +13,7 @@ public class KastPage extends Activity {
 		setContentView(R.layout.kast);
 	}
 	
-	public void onBackPressed(Bundle savedInstanceState) {
-		super.onBackPressed();
-		setContentView(R.layout.activity_main);
-		finish();
-	}
+
 	
 
 	@Override

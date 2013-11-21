@@ -8,51 +8,57 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity">
-
-  
-        
-        
+            
     <TextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/welcome"
-        android:textColor="#FFFFFF" />
-
-    <ImageButton
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/textView1"
-        android:layout_marginBottom="125dp"
-        android:layout_marginRight="24dp"
-        android:onClick="KastButton"
-        android:scaleType="fitXY"
-        android:src="@drawable/kastbutton"
-         />
-
-    <ImageButton
-        android:id="@+id/button3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/button2"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="121dp"
-        android:onClick="MenuButton"
-        android:scaleType="fitXY"
-        android:src="@drawable/menubutton" />
-         />
+        android:textColor="#FFFFFF" 
+        android:textSize="30sp"/>
 
     <ImageButton
         android:id="@+id/button1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/imageView1"
         android:layout_alignTop="@+id/button2"
-        android:layout_toRightOf="@+id/button3"
+        android:layout_marginRight="13dp"
         android:onClick="ViewButton"
         android:scaleType="fitXY"
         android:src="@drawable/viewbutton" />
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/textView1"
+        android:layout_below="@+id/textView1"
+        android:layout_marginTop="34dp"
+        android:src="@drawable/orangewifi" />
+
+    <ImageButton
+        android:id="@+id/button3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/button1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:onClick="MenuButton"
+        android:scaleType="fitXY"
+        android:src="@drawable/menubutton" />
+
+    <ImageButton
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/imageView1"
+        android:layout_below="@+id/imageView1"
+        android:layout_marginTop="17dp"
+        android:onClick="KastButton"
+        android:scaleType="fitXY"
+        android:src="@drawable/kastbutton" />
+
         />
 
 </RelativeLayout>

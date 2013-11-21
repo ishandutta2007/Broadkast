@@ -13,10 +13,7 @@ public class ViewPage extends Activity {
 		setContentView(R.layout.view);
 	}
 
-	public void onBackPressed(Bundle savedInstanceState) {
-		super.onBackPressed();
-		setContentView(R.layout.activity_main);
-	}
+	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
