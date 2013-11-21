@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/welcomekast"
+        android:textColor="#FFFFFF" />
+
+    <Button
+        android:id="@+id/startKast"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="startBroadcast"
+        android:text="@string/startKast" />
+
+    <Button
+        android:id="@+id/stopKast"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="stopBroadcast"
+        android:text="@string/stopKast" />
+
+</LinearLayout>
