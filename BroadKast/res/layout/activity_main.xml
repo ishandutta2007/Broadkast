@@ -29,7 +29,8 @@
         android:layout_marginRight="24dp"
         android:onClick="KastButton"
         android:scaleType="fitXY"
-        android:src="@drawable/kastbutton" />
+        android:src="@drawable/kastbutton"
+         />
 
     <ImageButton
         android:id="@+id/button3"

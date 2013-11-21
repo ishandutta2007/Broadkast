@@ -13,10 +13,12 @@ public class KastPage extends Activity {
 		setContentView(R.layout.kast);
 	}
 	
-	public void onBackPressed() {
-		
+	public void onBackPressed(Bundle savedInstanceState) {
+		super.onBackPressed();
 		setContentView(R.layout.activity_main);
+		finish();
 	}
+	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

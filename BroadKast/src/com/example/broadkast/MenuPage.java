@@ -18,11 +18,10 @@ public class MenuPage extends Activity {
 	}
 
 	
-
-
 	public void onBackPressed() {
 
-		setContentView(R.layout.activity_main);
+		//setContentView(R.layout.activity_main);
+		finish();
 	}
 	
 	@Override
