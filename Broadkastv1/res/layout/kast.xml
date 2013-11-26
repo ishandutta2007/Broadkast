@@ -12,18 +12,18 @@
         android:text="@string/welcomekast"
         android:textColor="#FFFFFF" />
 
-    <Button
+    <ImageButton
         android:id="@+id/startKast"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="startBroadcast"
-        android:text="@string/startKast" />
+        android:src="@drawable/startbutton" />
 
-    <Button
+    <ImageButton
         android:id="@+id/stopKast"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="stopBroadcast"
-        android:text="@string/stopKast" />
+        android:src="@drawable/stopbutton" />
 
 </LinearLayout>

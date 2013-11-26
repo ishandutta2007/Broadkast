@@ -8,9 +8,13 @@
     <string name="menu">menu</string>
     <string name="welcomekast">Ready To Kast?</string>
     <string name="welcomeview">Searching for devices...</string>
-    <string name="welcomemenu">Main Menu</string>
+    <string name="welcomemenu">App Information:</string>
     <string name="startKast">Start</string>
     <string name="stopKast">Stop</string>
+    <string name="broadkastversion">BroadKast Version: 1.0</string>
+    <string name="lastupdated">Last Update: Nov. 25, 2013</string>
+    
+    
     
 
 </resources>

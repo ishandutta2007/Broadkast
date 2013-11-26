@@ -4,20 +4,60 @@
     android:layout_height="match_parent"
     android:background="#000000"
     android:orientation="vertical" >
-    
-       <TextView
+
+    <TextView
         android:id="@+id/textView1"
-        android:textColor="#FFFFFF"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/welcomemenu"
-         />
-       
-       <AnalogClock
-        android:layout_width="fill_parent" 
-        android:layout_height="wrap_content"/>
-    
-    
+        android:textColor="#FFFFFF" />
 
+    <TextView
+        android:id="@+id/broadkastversion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/broadkastversion"
+        android:textColor="#FFFFFF" />
+    
+    <TextView
+        android:id="@+id/Manufacturer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#FFFFFF" />
+
+    <TextView
+        android:id="@+id/device"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#FFFFFF" />
+
+    <TextView
+        android:id="@+id/buildVersion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#FFFFFF" />
+
+    <TextView
+        android:id="@+id/screentype"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#FFFFFF" />
+
+    <TextView
+        android:id="@+id/timedate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#FFFFFF" />
+
+    <TextView
+        android:id="@+id/lastupdate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/lastupdated"
+        android:textColor="#FFFFFF" />
+
+    <AnalogClock
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>
