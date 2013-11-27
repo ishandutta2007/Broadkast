@@ -3,7 +3,6 @@ package com.example.broadkast;
 import java.util.HashMap;
 import java.util.Map;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.IntentFilter;
@@ -20,13 +19,14 @@ import android.net.wifi.p2p.WifiP2pManager.DnsSdTxtRecordListener;
 import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceInfo;
 import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceRequest;
 import android.util.Log;
-import android.view.View;
+
+import com.example.broadkast.WiFiDirectServicesList.WiFiDevicesAdapter;
 
 public class WiFiDirect implements ConnectionInfoListener {
 
 	// Thread on which socket connection(s) is managed
 		private Thread socketThread;
-		
+		private WiFiDirectServicesList servicesList;
 		
 		private final String SERVICE_NAME = "Broadkast";
 		static final int SERVER_PORT = 7878;
@@ -43,7 +43,9 @@ public class WiFiDirect implements ConnectionInfoListener {
 		private WifiP2pDevice serviceDevice;
 		private WifiP2pInfo p2pInfo;
 		
-
+		public void setList (WiFiDirectServicesList list){
+			servicesList = list;
+		}
 		public WiFiDirect(Context activity){
 
 			// Set up manager, channel, and receiver
@@ -148,7 +150,18 @@ public class WiFiDirect implements ConnectionInfoListener {
 						//EditText editText = (EditText) findViewById(R.id.edit_message);
 						//editText.setText(resourceType.deviceName + ":" + instanceName);
 						Log.w(getClass().getName(), "Discovered!");
-						serviceDevice = resourceType;
+					//serviceDevice = resourceType;
+						
+                        if (servicesList != null) {
+                            WiFiDevicesAdapter adapter = ((WiFiDevicesAdapter) servicesList
+                                    .getListAdapter());
+                            WiFiP2pService service = new WiFiP2pService();
+                            service.device = resourceType;
+                            service.instanceName = instanceName;
+                            service.serviceRegistrationType = registrationType;
+                            adapter.add(service);
+                            adapter.notifyDataSetChanged();
+                          }	
 					}
 				}
 			};
@@ -231,5 +244,9 @@ public class WiFiDirect implements ConnectionInfoListener {
 				}
 			}
 			
+		}
+		
+		public void setServiceDevice(WifiP2pDevice serviceDevice){
+			this.serviceDevice = serviceDevice;
 		}
 }

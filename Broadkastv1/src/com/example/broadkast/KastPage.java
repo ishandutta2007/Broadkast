@@ -8,11 +8,13 @@ import android.view.View;
 import android.widget.Toast;
 
 public class KastPage extends Activity {
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.kast);
+		
 	}
 	
 
