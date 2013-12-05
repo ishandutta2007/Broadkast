@@ -12,6 +12,13 @@ public class TransferManager implements Runnable {
 
 	public TransferManager(Socket socket) {
 		this.socket = socket;
+		try {
+			iStream = socket.getInputStream();
+			oStream = socket.getOutputStream();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 	}
 
 	private InputStream iStream;
@@ -29,8 +36,7 @@ public class TransferManager implements Runnable {
 			});
 			*/
 	
-			iStream = socket.getInputStream();
-			oStream = socket.getOutputStream();
+			
 			byte[] buffer = new byte[1024];
 			int bytes;
 			oStream.write(new String("This is a test message from server").getBytes());

@@ -8,6 +8,7 @@ import android.net.NetworkInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.net.wifi.p2p.WifiP2pManager.ConnectionInfoListener;
+import android.util.Log;
 
 public class WiFiDirectBroadcastReceiver extends BroadcastReceiver{
 
@@ -25,6 +26,8 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver{
     
     @Override
     public void onReceive(Context context, Intent intent) {
+    	Log.i("WIFI", "In onReceive of BroadcastReceiver");
+    	
     	String action = intent.getAction();
     	
     	if (WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION.equals(action)) {
@@ -40,6 +43,8 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver{
     	}
     	else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
     		
+    		Log.i("WIFI", "P2P connection changed");
+    		
     		if (manager == null) {
                 return;
             }
@@ -50,6 +55,7 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver{
             if (networkInfo.isConnected()) {
                 // we are connected with the other device, request connection
                 // info to find group owner IP
+            	Log.i("WIFI", "Requesting connection info");
                 manager.requestConnectionInfo(channel, (ConnectionInfoListener) direct);
             } else {
                 // It's a disconnect

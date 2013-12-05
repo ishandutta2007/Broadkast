@@ -1,20 +1,35 @@
 package com.example.broadkast;
 
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.IBinder;
-import android.os.SystemClock;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
+
 
 public class BroadcastService extends Service {
 
 	private boolean iscasting = false;
+	View screen;
+	
+	WiFiDirect wifid;
+	
+	
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
+		
+		wifid = KastPage.activity;
+		wifid.startRegistration();
+		wifid.discoverService();
 		
 		broadcast();
 		return (START_NOT_STICKY);
@@ -49,12 +64,17 @@ public class BroadcastService extends Service {
 					"Now Broadcasting screen", pi);
 			note.flags |= Notification.FLAG_NO_CLEAR;
 
+			
+			
 			startForeground(1337, note);
+			//captureScreen();
 
 		}
 	}
 
+	
 	private void stop() {
+		wifid.stopBroadcasting();
 		if(iscasting){
 			Log.w(getClass().getName(), "Got to stop()!");
 			iscasting = false;

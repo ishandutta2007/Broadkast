@@ -1,32 +1,38 @@
 package com.example.broadkast;
 
-import android.os.Bundle;
 import android.app.Activity;
+import android.content.IntentFilter;
+import android.net.wifi.p2p.WifiP2pManager;
+import android.os.Bundle;
 import android.view.Menu;
-import android.view.View;
+
 
 import com.example.broadkast.WiFiDirectServicesList;
 
-public class ViewPage extends Activity {
+public class ViewPage extends WiFiDirect {
 
+	public static Activity activity;
+	
+	public IntentFilter intentFilter;
+	
 	private WiFiDirectServicesList servicesList;
-	private WiFiDirect wifiD;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		wifiD = new WiFiDirect(this);
-		wifiD.discoverService();
+		
+		discoverService();
 		servicesList = new WiFiDirectServicesList();
         getFragmentManager().beginTransaction()
                 .add(R.id.container_root, servicesList, "services").commit();
 		setContentView(R.layout.view);
-		wifiD.setList(servicesList);
-		servicesList.setWiFiDirect(wifiD);
+		this.setList(servicesList);
+		servicesList.setWiFiDirect(this);
+		
+		ViewPage.activity = this;
 	}
 
 	
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -34,8 +40,14 @@ public class ViewPage extends Activity {
 		return true;
 	}
 	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		this.stopBroadcasting();		
+	}
+	
 	public WiFiDirect getWiFiDirect(){
-		return wifiD;
+		return this;
 	}
 
 }

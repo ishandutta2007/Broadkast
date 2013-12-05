@@ -3,6 +3,7 @@ package com.example.broadkast;
 import java.util.HashMap;
 import java.util.Map;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.IntentFilter;
@@ -18,15 +19,19 @@ import android.net.wifi.p2p.WifiP2pManager.DnsSdServiceResponseListener;
 import android.net.wifi.p2p.WifiP2pManager.DnsSdTxtRecordListener;
 import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceInfo;
 import android.net.wifi.p2p.nsd.WifiP2pDnsSdServiceRequest;
+import android.os.Bundle;
 import android.util.Log;
 
 import com.example.broadkast.WiFiDirectServicesList.WiFiDevicesAdapter;
 
-public class WiFiDirect implements ConnectionInfoListener {
+public class WiFiDirect extends Activity implements ConnectionInfoListener {
 
-	// Thread on which socket connection(s) is managed
+		// Thread on which socket connection(s) is managed
 		private Thread socketThread;
 		private WiFiDirectServicesList servicesList;
+		
+		// Thread on which screen is captured and transmitted
+		private Thread screenCaptureThread;
 		
 		private final String SERVICE_NAME = "Broadkast";
 		static final int SERVER_PORT = 7878;
@@ -46,19 +51,33 @@ public class WiFiDirect implements ConnectionInfoListener {
 		public void setList (WiFiDirectServicesList list){
 			servicesList = list;
 		}
-		public WiFiDirect(Context activity){
+		
+		@Override
+		protected void onCreate(Bundle savedInstanceState){
+			super.onCreate(savedInstanceState);
+			setContentView(R.layout.activity_main);
 
-			// Set up manager, channel, and receiver
-			manager = (WifiP2pManager) activity.getSystemService(Context.WIFI_P2P_SERVICE);
-			channel = manager.initialize(activity, activity.getMainLooper(), null);
+			manager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
+			channel = manager.initialize(this, getMainLooper(), null);
 			receiver = new WiFiDirectBroadcastReceiver(manager, channel, this);
 
-			// Set up intent filter for use in BroadcastReceiver
 			intentFilter = new IntentFilter();
 			intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
 			intentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
 			intentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
 			//intentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
+		}
+		
+		@Override
+		protected void onResume() {
+			super.onResume();
+			registerReceiver(receiver, intentFilter);
+		}
+
+		@Override
+		protected void onPause() {
+			super.onPause();
+			unregisterReceiver(receiver);
 		}
 		
 		/* Called by 'Viewers' to connect to serviceDevice. This serviceDevice is currently
@@ -72,6 +91,7 @@ public class WiFiDirect implements ConnectionInfoListener {
 				return;
 			}
 			
+			Log.i("WIFI","Connecting to device.");
 
 			WifiP2pConfig config = new WifiP2pConfig();
 			config.deviceAddress = serviceDevice.deviceAddress;
@@ -215,13 +235,10 @@ public class WiFiDirect implements ConnectionInfoListener {
 		
 		@Override
 		public void onConnectionInfoAvailable(WifiP2pInfo p2pInfo) {
-			//printMessage("group formed = " + p2pInfo.groupFormed + ", owner address = "
-			//		+  p2pInfo.groupOwnerAddress.getHostAddress() + ", Is group owner = " +  p2pInfo.isGroupOwner);
-
 			// Get p2pInfo
 			this.p2pInfo = p2pInfo;
 			
-			
+			Log.i("WIFI", "Connection Info Available");
 			
 			// Check if thread has already been started
 			if(socketThread != null)
@@ -235,18 +252,96 @@ public class WiFiDirect implements ConnectionInfoListener {
 			if (ready && !p2pInfo.isGroupOwner){
 				socketThread = new Thread(new ClientThread(p2pInfo.groupOwnerAddress));
 				socketThread.start();
+				Log.i("WIFI", "Started Client");
 			}
 			else{
 				if (ready && p2pInfo.isGroupOwner){
 					// Create ServerThread
-					socketThread = new Thread(new ServerThread());
+					ServerThread serverThread = new ServerThread(this);
+					socketThread = new Thread(serverThread);
 					socketThread.start();
+					Log.i("WIFI", "Started Server");
+					
+					// Create ScreenCaptureThread
+					screenCaptureThread = new Thread(new ScreenCaptureThread(serverThread));
+					screenCaptureThread.start();
+					Log.i("SCREEN CAPTURE", "Started screen capture thread");
 				}
 			}
 			
 		}
 		
+		
 		public void setServiceDevice(WifiP2pDevice serviceDevice){
 			this.serviceDevice = serviceDevice;
 		}
+		
+		public void stopBroadcasting(){
+			manager.cancelConnect(channel, new ActionListener() {
+
+				@Override
+				public void onSuccess() {
+				}
+
+				@Override
+				public void onFailure(int arg0) {
+				
+				}
+			});
+			
+			this.p2pInfo = null;
+			this.serviceDevice = null;
+		}
+		
+		/*
+		private ArrayList<Socket> sockets = new ArrayList<Socket>();
+		
+		public synchronized void addSocket(Socket s){			
+			View v = KastPage.view;
+			v = v.getRootView();
+			v.setDrawingCacheEnabled(true);
+			
+			ByteArrayOutputStream os = new ByteArrayOutputStream();
+			v.getDrawingCache().compress(Bitmap.CompressFormat.PNG, 85, os);
+			Log.i("WIFI", "Size of bitmap = " + os.size());
+			
+			
+			
+			File f = new File("/storage/sdcard0/Pictures/Screenshots/Screenshot_2013-10-31-12-13-28.png");
+			byte[] buffer = new byte[300000];
+			int bytes = 0;
+			
+			try{
+				bytes = new FileInputStream(f).read(buffer);
+			}
+			catch(IOException e){
+				e.printStackTrace();
+			}
+			
+			
+			sockets.add(s);
+			
+			write(os.toByteArray());			
+		}
+		
+		public synchronized void write(byte[] buff){
+			for(Socket s : sockets){
+				try {
+					s.getOutputStream().write(buff);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		public synchronized void write(byte[] buff, int offset, int numBytes){
+			for(Socket s : sockets){
+				try {
+					s.getOutputStream().write(buff,offset,numBytes);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		*/
 }
