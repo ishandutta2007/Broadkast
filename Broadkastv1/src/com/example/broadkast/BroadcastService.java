@@ -1,9 +1,14 @@
 package com.example.broadkast;
 
 
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
+import java.io.InputStream;
+import java.io.OutputStream;
+
 
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -18,6 +23,8 @@ import android.widget.Toast;
 
 public class BroadcastService extends Service {
 
+	public static final int WIDTH = 736;
+	public static final int HEIGHT = 1280;
 	private boolean iscasting = false;
 	View screen;
 	
@@ -82,4 +89,30 @@ public class BroadcastService extends Service {
 			Toast.makeText(this, "Broadcast ended", Toast.LENGTH_LONG).show();
 		}
 	}
+	
+	private void sendFrameBuffer() {
+        try {
+                Process p = Runtime.getRuntime().exec("/system/bin/cat /dev/graphics/fb0");
+                InputStream is = p.getInputStream();
+                Log.w(getClass().getName(), "Starting sending framebuffer");
+                //OutputStream os = s.getOutputStream();
+                byte[] buff = new byte[WIDTH*HEIGHT*3];
+                while(true) {
+                        //FileInputStream fos = new FileInputStream("/dev/graphics/fb0");
+                        int nb = is.read(buff);
+                        if(nb < -1)
+                                break;
+                        //fos.close();
+                        System.out.println("val "+nb);
+                        //wifiD goes here
+                        //os.write(buff,0,nb);
+                        Thread.sleep(10);
+                }
+                is.close();
+                Log.w(getClass().getName(), "End of sending thread");
+                
+        } catch(Exception ex) {
+                ex.printStackTrace();
+        }
+}
 }

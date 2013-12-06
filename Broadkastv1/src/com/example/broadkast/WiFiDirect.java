@@ -250,7 +250,7 @@ public class WiFiDirect extends Activity implements ConnectionInfoListener {
 			boolean ready = p2pInfo != null && p2pInfo.groupFormed;
 						
 			if (ready && !p2pInfo.isGroupOwner){
-				socketThread = new Thread(new ClientThread(p2pInfo.groupOwnerAddress));
+				socketThread = new Thread(new ClientThread(p2pInfo.groupOwnerAddress,this));
 				socketThread.start();
 				Log.i("WIFI", "Started Client");
 			}

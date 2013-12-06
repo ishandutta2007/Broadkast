@@ -56,7 +56,8 @@ public class WiFiDirectServicesList extends ListFragment {
     	wifiD.setServiceDevice(((WiFiP2pService) l.getItemAtPosition(position)).device);
     	wifiD.connectToDevice();
     	
-        ((TextView) v.findViewById(android.R.id.text2)).setText("Please make sure to check with your broadcaster");
+        ((TextView) v.findViewById(android.R.id.text2)).setText("GET READY!!!");
+        
         
      }
 

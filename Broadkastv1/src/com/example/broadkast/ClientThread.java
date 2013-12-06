@@ -11,14 +11,20 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 
 import android.util.Log;
-import android.widget.Toast;
+import android.view.View;
 
 public class ClientThread implements Runnable{
 
+	public static final int WIDTH = 736;
+	public static final int HEIGHT = 1280;
+	
 	private InetAddress mAddress;
-
-	public ClientThread(InetAddress groupOwnerAddress) {
+	private View screen;
+	public ClientThread(InetAddress groupOwnerAddress, WiFiDirect wd) {
 		this.mAddress = groupOwnerAddress;
+		screen = new StreamView(wd);
+		wd.setContentView(screen);
+		Log.i("Client thread", "Set content view to StreamView.");
 	}
 
 	@Override
@@ -31,8 +37,8 @@ public class ClientThread implements Runnable{
 
 			InputStream iStream = socket.getInputStream();
 
-			String message = new String();
-			byte[] buffer = new byte[1024];
+			//String message = new String();
+			byte[] buffer = new byte[WIDTH*HEIGHT];
 			int bytes;
 			
 			Log.i("WIFI", "Beginning to read from input stream");
@@ -44,13 +50,15 @@ public class ClientThread implements Runnable{
 					// Read from the InputStream
 					bytes = iStream.read(buffer);
 					if (bytes == -1) {
+						Log.e("Client thread", "Couldn't read from socket input stream.");
 						break;
 					}
-					message = new String(buffer, 0, bytes);
-
-					/*
+					//message = new String(buffer, 0, bytes);
 					byteOs.write(buffer);
-					
+					if(byteOs.size() >= WIDTH*HEIGHT)
+					{
+						//
+					}
 					File f = new File("/storage/sdcard0/Pictures","capture.png");
 					
 					f.delete();
@@ -60,16 +68,16 @@ public class ClientThread implements Runnable{
 					
 					
 					Log.i("WIFI","ByteOs.size = "  + byteOs.size());
-					*/
 					
-					final String printMessage = new String(message);
 					
-					ViewPage.activity.runOnUiThread(new Runnable(){
-						@Override
-						public void run(){
-							Toast.makeText(ViewPage.activity, printMessage, Toast.LENGTH_LONG).show();
-						}
-					});
+//					final String printMessage = new String(message);
+//					
+//					ViewPage.activity.runOnUiThread(new Runnable(){
+//						@Override
+//						public void run(){
+//							Toast.makeText(ViewPage.activity, printMessage, Toast.LENGTH_LONG).show();
+//						}
+//					});
 					
 					
 				} catch (IOException e) {
