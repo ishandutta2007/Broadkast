@@ -130,7 +130,7 @@ public class WiFiDirect extends Activity implements ConnectionInfoListener {
 		 * can discover and connect to them.
 		 */
 		public void startRegistration(){
-			Log.w(getClass().getName(), "Start Registration!");
+			Log.i(getClass().getName(), "Start Registration!");
 			Map<String, String> record = new HashMap<String, String>();
 			record.put("available", "visible");
 
@@ -140,12 +140,12 @@ public class WiFiDirect extends Activity implements ConnectionInfoListener {
 
 				@Override
 				public void onSuccess() {
-					Log.w(getClass().getName(), "Successful registration!");
+					Log.i(getClass().getName(), "Successful registration!");
 				}
 
 				@Override
 				public void onFailure(int error) {
-					Log.w(getClass().getName(), "Failed registration!");
+					Log.i(getClass().getName(), "Failed registration!");
 				}
 			});
 		}
@@ -169,7 +169,7 @@ public class WiFiDirect extends Activity implements ConnectionInfoListener {
 						// Add service
 						//EditText editText = (EditText) findViewById(R.id.edit_message);
 						//editText.setText(resourceType.deviceName + ":" + instanceName);
-						Log.w(getClass().getName(), "Discovered!");
+						Log.i(getClass().getName(), "Discovered!");
 					//serviceDevice = resourceType;
 						
                         if (servicesList != null) {

@@ -55,7 +55,7 @@ public class BroadcastService extends Service {
 	
 	private void broadcast(){
 		if(!iscasting){
-			Log.w(getClass().getName(), "Got to broadcast()!");
+			Log.i(getClass().getName(), "Got to broadcast()!");
 			iscasting = true;
 			
 			Notification note = new Notification(R.drawable.ic_launcher,
