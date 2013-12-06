@@ -15,6 +15,8 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver{
 	private WifiP2pManager manager;
     private Channel channel;
     private WiFiDirect direct;
+    
+    private String TAG;
 
     public WiFiDirectBroadcastReceiver(WifiP2pManager manager, Channel channel,
             WiFiDirect direct) {
@@ -22,11 +24,12 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver{
         this.manager = manager;
         this.channel = channel;
         this.direct = direct;
+        TAG = getClass().getName();
     }
     
     @Override
     public void onReceive(Context context, Intent intent) {
-    	Log.i("WIFI", "In onReceive of BroadcastReceiver");
+    	Log.i(TAG, "In onReceive of BroadcastReceiver");
     	
     	String action = intent.getAction();
     	
@@ -43,7 +46,7 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver{
     	}
     	else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {
     		
-    		Log.i("WIFI", "P2P connection changed");
+    		Log.i(TAG, "P2P connection changed");
     		
     		if (manager == null) {
                 return;
@@ -55,7 +58,7 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver{
             if (networkInfo.isConnected()) {
                 // we are connected with the other device, request connection
                 // info to find group owner IP
-            	Log.i("WIFI", "Requesting connection info");
+            	Log.i(TAG, "Requesting connection info");
                 manager.requestConnectionInfo(channel, (ConnectionInfoListener) direct);
             } else {
                 // It's a disconnect

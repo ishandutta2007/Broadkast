@@ -26,8 +26,10 @@ public class WiFiDirectServicesList extends ListFragment {
 	WiFiDirect wifiD;
     WiFiDevicesAdapter listAdapter = null;
 
+    private String TAG;
     interface DeviceClickListener {
         public void connectP2p(WiFiP2pService wifiP2pService);
+        
     }
 
     @Override
@@ -43,6 +45,7 @@ public class WiFiDirectServicesList extends ListFragment {
                 android.R.layout.simple_list_item_2, android.R.id.text1,
                 new ArrayList<WiFiP2pService>());
         setListAdapter(listAdapter);
+        TAG = getClass().getName();
     }
 
     @Override
@@ -52,7 +55,7 @@ public class WiFiDirectServicesList extends ListFragment {
         //        .getItemAtPosition(position));
     
     	
-    	Log.i("WIFI","List item clicked.");
+    	Log.i(TAG,"List item clicked.");
     	wifiD.setServiceDevice(((WiFiP2pService) l.getItemAtPosition(position)).device);
     	wifiD.connectToDevice();
     	

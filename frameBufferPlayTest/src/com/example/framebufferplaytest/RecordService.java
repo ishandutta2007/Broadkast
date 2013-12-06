@@ -1,27 +1,20 @@
-package com.example.broadkast;
+package com.example.framebufferplaytest;
 
-
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
-import java.io.InputStream;
-import java.io.OutputStream;
-
+import com.example.broadkast.KastPage;
+import com.example.broadkast.R;
+import com.example.broadkast.WiFiDirect;
 
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+public class RecordService extends Service {
 
-public class BroadcastService extends Service {
 
 	public static final int WIDTH = 736;
 	public static final int HEIGHT = 1280;
@@ -29,8 +22,14 @@ public class BroadcastService extends Service {
 	View screen;
 	
 	WiFiDirect wifid;
+
+	@Override
+	public IBinder onBind(Intent arg0) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
-	
+
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		
@@ -89,5 +88,6 @@ public class BroadcastService extends Service {
 			Toast.makeText(this, "Broadcast ended", Toast.LENGTH_LONG).show();
 		}
 	}
+	
 
 }

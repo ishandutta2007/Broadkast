@@ -48,8 +48,11 @@ public class WiFiDirect extends Activity implements ConnectionInfoListener {
 		private WifiP2pDevice serviceDevice;
 		private WifiP2pInfo p2pInfo;
 		
+		private String TAG;
+		
 		public void setList (WiFiDirectServicesList list){
 			servicesList = list;
+			TAG = getClass().getName();
 		}
 		
 		@Override
@@ -91,7 +94,7 @@ public class WiFiDirect extends Activity implements ConnectionInfoListener {
 				return;
 			}
 			
-			Log.i("WIFI","Connecting to device.");
+			Log.i(TAG,"Connecting to device.");
 
 			WifiP2pConfig config = new WifiP2pConfig();
 			config.deviceAddress = serviceDevice.deviceAddress;
@@ -130,7 +133,7 @@ public class WiFiDirect extends Activity implements ConnectionInfoListener {
 		 * can discover and connect to them.
 		 */
 		public void startRegistration(){
-			Log.i(getClass().getName(), "Start Registration!");
+			Log.i(TAG, "Start Registration!");
 			Map<String, String> record = new HashMap<String, String>();
 			record.put("available", "visible");
 
@@ -140,12 +143,12 @@ public class WiFiDirect extends Activity implements ConnectionInfoListener {
 
 				@Override
 				public void onSuccess() {
-					Log.i(getClass().getName(), "Successful registration!");
+					Log.i(TAG, "Successful registration!");
 				}
 
 				@Override
 				public void onFailure(int error) {
-					Log.i(getClass().getName(), "Failed registration!");
+					Log.i(TAG, "Failed registration!");
 				}
 			});
 		}
@@ -169,7 +172,7 @@ public class WiFiDirect extends Activity implements ConnectionInfoListener {
 						// Add service
 						//EditText editText = (EditText) findViewById(R.id.edit_message);
 						//editText.setText(resourceType.deviceName + ":" + instanceName);
-						Log.i(getClass().getName(), "Discovered!");
+						Log.i(TAG, "Discovered!");
 					//serviceDevice = resourceType;
 						
                         if (servicesList != null) {
@@ -238,7 +241,7 @@ public class WiFiDirect extends Activity implements ConnectionInfoListener {
 			// Get p2pInfo
 			this.p2pInfo = p2pInfo;
 			
-			Log.i("WIFI", "Connection Info Available");
+			Log.i(TAG, "Connection Info Available");
 			
 			// Check if thread has already been started
 			if(socketThread != null)
@@ -252,7 +255,7 @@ public class WiFiDirect extends Activity implements ConnectionInfoListener {
 			if (ready && !p2pInfo.isGroupOwner){
 				socketThread = new Thread(new ClientThread(p2pInfo.groupOwnerAddress,this));
 				socketThread.start();
-				Log.i("WIFI", "Started Client");
+				Log.i(TAG, "Started Client");
 			}
 			else{
 				if (ready && p2pInfo.isGroupOwner){
@@ -260,12 +263,12 @@ public class WiFiDirect extends Activity implements ConnectionInfoListener {
 					ServerThread serverThread = new ServerThread(this);
 					socketThread = new Thread(serverThread);
 					socketThread.start();
-					Log.i("WIFI", "Started Server");
+					Log.i(TAG, "Started Server");
 					
 					// Create ScreenCaptureThread
 					screenCaptureThread = new Thread(new ScreenCaptureThread(serverThread));
 					screenCaptureThread.start();
-					Log.i("SCREEN CAPTURE", "Started screen capture thread");
+					Log.i(TAG, "Started screen capture thread");
 				}
 			}
 			

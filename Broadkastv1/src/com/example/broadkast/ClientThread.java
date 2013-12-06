@@ -18,7 +18,8 @@ public class ClientThread implements Runnable{
 
 	public static final int WIDTH = 736;
 	public static final int HEIGHT = 1280;
-	public static final String TAG = "ClientThread";
+	public static String TAG;
+	
 	
 	private InetAddress mAddress;
 	private StreamView screen;
@@ -26,6 +27,7 @@ public class ClientThread implements Runnable{
 		this.mAddress = groupOwnerAddress;
 		screen = new StreamView(wd);
 		wd.setContentView(screen);
+		TAG = getClass().getName();
 		Log.i(TAG, "Set content view to StreamView.");
 	}
 
