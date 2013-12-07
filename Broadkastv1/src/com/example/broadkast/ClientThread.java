@@ -24,13 +24,14 @@ public class ClientThread implements Runnable{
 	private InetAddress mAddress;
 	private final ImageView screen;
 	private final WiFiDirect wd;
+	private final ClientUiThread uiThread;
 	
 	public ClientThread(InetAddress groupOwnerAddress, WiFiDirect wd, ImageView v) {
 		this.mAddress = groupOwnerAddress;
 		this.wd = wd;
 		this.screen = v;
-		
-		
+		this.uiThread = new ClientUiThread(wd,v);
+		this.uiThread.start();
 		
 		/*
 		screen = new StreamView(wd);
@@ -103,14 +104,14 @@ public class ClientThread implements Runnable{
 						readingFile = false;
 						
 						final Bitmap bm = BitmapFactory.decodeByteArray(osBuff, 0, fileSize);
+						uiThread.updateBitmaps(bm);
 						
-						
-						wd.runOnUiThread(new Runnable(){
+						/*wd.runOnUiThread(new Runnable(){
 							@Override
 							public void run(){
 								screen.setImageBitmap(bm);
 							}
-						});
+						});*/
 						
 						fileCount++;
 						Log.i("WIFI", "Saved file");
