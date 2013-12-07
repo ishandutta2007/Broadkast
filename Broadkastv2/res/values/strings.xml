@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">BroadKast</string>
+    <string name="action_settings">Settings</string>
+    <string name="welcome">Welcome to BroadKast!</string>
+    <string name="kast">Kast!</string>
+    <string name="menu">menu</string>
+    <string name="welcomekast">Ready To Kast?</string>
+    <string name="welcomeview">Searching for devices...</string>
+    <string name="welcomemenu">App Information:</string>
+    <string name="startKast">Start</string>
+    <string name="stopKast">Stop</string>
+    <string name="broadkastversion">BroadKast Version: 1.0</string>
+    <string name="lastupdated">Last Update: Nov. 25, 2013</string>
+    <string name="finding_service">Finding Service</string>
+    
+    
+    
+
+</resources>

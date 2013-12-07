@@ -1,0 +1,22 @@
+thoughts on program:
+
+-currently appears that the command to open a stream from /dev/graphics/fb0 is not working
+	->might be able to call a c function which could map framebuffer to memory, and then memcopy
+		the fb0 into a passed in array from java, and either return number of bytes copied, or
+		assume it copied all of them
+
+	->might just be calling the function incorrectly, or don't have proper permissions
+	
+->command starting working, not sure why exactly. Did do chmod 777 on /dev/graphics/fb0 again, but not sure if reason.
+
+-new issue:  was expecting fb0 to be continually read as a stream, turns out it is only being read once (736px*1280px*3screens*4bytes/px=11304960bytes)
+		which is the exact amount being written out before -1 is returned by is.write()
+
+	->could either try getting this data from a native call through jni to a c function that has memory mapped fb0, 
+		or could maybe try reopening stream or something
+
+
+other issues:
+-seems that sometimes the broadcaster will try to receive, and the receiver will try to broadcast
+
+-wifi direct connection should be closed at somepoint, creates weird before if connection is established before app is running

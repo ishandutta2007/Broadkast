@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/welcomemenu"
+        android:textColor="#FFFFFF" />
+
+    <TextView
+        android:id="@+id/broadkastversion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/broadkastversion"
+        android:textColor="#FFFFFF" />
+    
+    <TextView
+        android:id="@+id/Manufacturer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#FFFFFF" />
+
+    <TextView
+        android:id="@+id/device"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#FFFFFF" />
+
+    <TextView
+        android:id="@+id/buildVersion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#FFFFFF" />
+
+    <TextView
+        android:id="@+id/screentype"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#FFFFFF" />
+
+    <TextView
+        android:id="@+id/timedate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#FFFFFF" />
+
+    <TextView
+        android:id="@+id/lastupdate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/lastupdated"
+        android:textColor="#FFFFFF" />
+
+    <AnalogClock
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>
