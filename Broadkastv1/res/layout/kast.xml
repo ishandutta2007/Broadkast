@@ -25,5 +25,9 @@
         android:layout_height="wrap_content"
         android:onClick="stopBroadcast"
         android:src="@drawable/stopbutton" />
+    
+    <AnalogClock
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

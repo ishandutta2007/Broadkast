@@ -21,14 +21,14 @@ public class ViewPage extends WiFiDirect {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		discoverService();
+		
 		servicesList = new WiFiDirectServicesList();
         getFragmentManager().beginTransaction()
                 .add(R.id.container_root, servicesList, "services").commit();
 		setContentView(R.layout.view);
 		this.setList(servicesList);
 		servicesList.setWiFiDirect(this);
-		
+		discoverService();
 		ViewPage.activity = this;
 	}
 
@@ -43,7 +43,7 @@ public class ViewPage extends WiFiDirect {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		this.stopBroadcasting();		
+		this.stopCommunication();		
 	}
 	
 	public WiFiDirect getWiFiDirect(){

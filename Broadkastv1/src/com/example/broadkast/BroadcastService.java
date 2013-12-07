@@ -36,7 +36,7 @@ public class BroadcastService extends Service {
 		
 		wifid = KastPage.activity;
 		wifid.startRegistration();
-		wifid.discoverService();
+		//wifid.discoverService();
 		
 		broadcast();
 		return (START_NOT_STICKY);
@@ -81,7 +81,7 @@ public class BroadcastService extends Service {
 
 	
 	private void stop() {
-		wifid.stopBroadcasting();
+		wifid.stopCommunication();
 		if(iscasting){
 			Log.w(getClass().getName(), "Got to stop()!");
 			iscasting = false;

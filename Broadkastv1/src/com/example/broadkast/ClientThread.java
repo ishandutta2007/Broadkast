@@ -5,13 +5,16 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.nio.ByteBuffer;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
-import android.view.View;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 public class ClientThread implements Runnable{
 
@@ -19,12 +22,25 @@ public class ClientThread implements Runnable{
 	public static final int HEIGHT = 1280;
 	
 	private InetAddress mAddress;
-	private View screen;
-	public ClientThread(InetAddress groupOwnerAddress, WiFiDirect wd) {
+	private final ImageView screen;
+	private final WiFiDirect wd;
+	
+	public ClientThread(InetAddress groupOwnerAddress, WiFiDirect wd, ImageView v) {
 		this.mAddress = groupOwnerAddress;
+		this.wd = wd;
+		this.screen = v;
+		
+		
+		
+		/*
 		screen = new StreamView(wd);
-		wd.setContentView(screen);
-		Log.i("Client thread", "Set content view to StreamView.");
+		ImageView v =  new ImageView(wd);
+		Drawable draw = Drawable.createFromPath("/storage/sdcard0/Pictures/Screenshot_2013-10-04-15-07-01.png");
+		v.setImageDrawable(draw);
+		wd.setContentView(v);
+		*/
+		//wd.setContentView(screen);
+		//Log.i("Client thread", "Set content view to StreamView.");
 	}
 
 	@Override
@@ -38,12 +54,20 @@ public class ClientThread implements Runnable{
 			InputStream iStream = socket.getInputStream();
 
 			//String message = new String();
-			byte[] buffer = new byte[WIDTH*HEIGHT];
+			//byte[] buffer = new byte[WIDTH*HEIGHT];
+			byte[] buffer = new byte[4000000];
 			int bytes;
 			
 			Log.i("WIFI", "Beginning to read from input stream");
 			
+			// Store data in byteOs until entire image/file has been received
 			ByteArrayOutputStream byteOs = new ByteArrayOutputStream();
+			
+			boolean readingFile = false;
+			int fileSize = 0;
+			int fileCount = 0;
+			
+			Log.i("WIFI","In client thread");
 			
 			while (true) {
 				try {
@@ -53,6 +77,48 @@ public class ClientThread implements Runnable{
 						Log.e("Client thread", "Couldn't read from socket input stream.");
 						break;
 					}
+					
+					
+					byteOs.write(buffer,0,bytes);
+					if (!readingFile) { 
+						if(byteOs.size() >= 4){
+							int osSize = byteOs.size();
+							byte[] osBuff = byteOs.toByteArray();
+							fileSize = ByteBuffer.wrap(osBuff.clone(), 0, 4).getInt();
+							
+							byteOs.reset();
+							
+							byteOs.write(osBuff, 4, osSize - 4);
+							readingFile = true;
+							Log.i("WIFI","Filesize = "  + fileSize);
+						}
+					}
+					
+					if (readingFile && fileSize <= byteOs.size()){
+						int osSize = byteOs.size();
+						byte[] osBuff = byteOs.toByteArray();
+						byteOs.reset();
+						
+						byteOs.write(osBuff, fileSize, osSize - fileSize);
+						readingFile = false;
+						
+						final Bitmap bm = BitmapFactory.decodeByteArray(osBuff, 0, fileSize);
+						
+						
+						wd.runOnUiThread(new Runnable(){
+							@Override
+							public void run(){
+								screen.setImageBitmap(bm);
+							}
+						});
+						
+						fileCount++;
+						Log.i("WIFI", "Saved file");
+					}
+					
+					Log.i("WIFI","ByteOs.size = "  + byteOs.size());
+					
+					/*
 					//message = new String(buffer, 0, bytes);
 					byteOs.write(buffer);
 					if(byteOs.size() >= WIDTH*HEIGHT)
@@ -65,20 +131,18 @@ public class ClientThread implements Runnable{
 					OutputStream os = new FileOutputStream(f);
 					os.write(byteOs.toByteArray());
 					os.close();
+					*/
 					
+					/*
+					final String printMessage = new String(message);
 					
-					Log.i("WIFI","ByteOs.size = "  + byteOs.size());
-					
-					
-//					final String printMessage = new String(message);
-//					
-//					ViewPage.activity.runOnUiThread(new Runnable(){
-//						@Override
-//						public void run(){
-//							Toast.makeText(ViewPage.activity, printMessage, Toast.LENGTH_LONG).show();
-//						}
-//					});
-					
+					ViewPage.activity.runOnUiThread(new Runnable(){
+						@Override
+						public void run(){
+							Toast.makeText(ViewPage.activity, printMessage, Toast.LENGTH_LONG).show();
+						}
+					});
+					*/
 					
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -95,7 +159,6 @@ public class ClientThread implements Runnable{
 			return;
 		}
 	}
-
-
+	
 }
 
