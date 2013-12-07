@@ -18,14 +18,16 @@ public class ScreenCaptureThread implements Runnable{
 
 	private ServerThread serverThread;
 	private View v;
+	private WiFiDirect wd;
 
 	public static final int WIDTH = 736;
 	public static final int HEIGHT = 1280;
 
 
-	public ScreenCaptureThread(ServerThread serverThread, View v){
+	public ScreenCaptureThread(ServerThread serverThread, View v, WiFiDirect wd){
 		this.serverThread = serverThread;
 		this.v = v;
+		this.wd = wd;
 	}
 
 	@Override
@@ -56,21 +58,37 @@ public class ScreenCaptureThread implements Runnable{
 			ex.printStackTrace();
 		}
 		 */
-
+		
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
-
+		
 		while(true){
-			while(System.currentTimeMillis() % 1000 != 0){
+			while(System.currentTimeMillis() % 10 != 0){
 
 			}
-
-			v.setDrawingCacheEnabled(true);
-			Bitmap bm = v.getDrawingCache();
-			bm.compress(CompressFormat.WEBP, 1, os);
-			write(os.toByteArray(), 0, os.size());
-			os.reset();
+			
+			wd.runOnUiThread(new Runnable(){
+				@Override
+				public void run(){
+				setBitmap(v.getDrawingCache());	
+				}
+			});
+			Bitmap bm = getBitmap();
+			if(bm != null){
+				bm.compress(CompressFormat.WEBP, 1, os);
+				write(os.toByteArray(), 0, os.size());
+				os.reset();
+			}
 		}
 
+	}
+	
+	private Bitmap bm;
+	public synchronized void setBitmap(Bitmap bm){
+		this.bm = bm;
+	}
+	
+	public synchronized Bitmap getBitmap(){
+		return this.bm;
 	}
 
 	public void write(byte[] buff){

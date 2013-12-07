@@ -299,9 +299,9 @@ public class WiFiDirect extends Activity implements ConnectionInfoListener {
 				Log.i("WIFI", "Started Server");
 
 				// Create ScreenCaptureThread
-				// activity= getCurrentActivity();
 				View v = this.getWindow().getDecorView().getRootView();
-				screenCaptureThread = new Thread(new ScreenCaptureThread(serverThread,v));
+				v.setDrawingCacheEnabled(true);
+				screenCaptureThread = new Thread(new ScreenCaptureThread(serverThread,v,this));
 				screenCaptureThread.start();
 				Log.i("SCREEN CAPTURE", "Started screen capture thread");
 			}
