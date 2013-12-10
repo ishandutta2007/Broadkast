@@ -5,16 +5,15 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.nio.ByteBuffer;
 
-import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
 
-public class ScreenCaptureThread implements Runnable{
+public class ScreenCaptureThread extends Thread{
 
 	private ServerThread serverThread;
 	private View v;
@@ -34,31 +33,71 @@ public class ScreenCaptureThread implements Runnable{
 	public void run() {
 		//long prev = System.currentTimeMillis();
 
-		byte[] buffer = new byte[4000000];
+		byte[] buffer = new byte[10000000];
 		int bytes = 0;
-		/*
-		try {
-			Process p = Runtime.getRuntime().exec("/system/bin/cat /dev/graphics/fb0");
-			InputStream is = p.getInputStream();
-			Log.i(getClass().getName(), "Starting sending framebuffer");
-			byte[] buff = new byte[WIDTH*HEIGHT*3];
-			while(true) {
 
-				int nb = is.read(buff);
-				if(nb < -1)
-					break;
+		String cmd = new String("/system/bin/screencap -p /storage/sdcard0/Pictures/screen.png");
 
-				write(buff,0,nb);
+		Runtime runtime = Runtime.getRuntime();
+		Process proc = null;
+		OutputStreamWriter osw = null;
+
+		while(true){
+			try { // Run Script
+				proc = runtime.exec("su");
+				osw = new OutputStreamWriter(proc.getOutputStream());
+				osw.write(cmd);
+				osw.flush();
+				osw.close();
+				try {
+					proc.waitFor();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			} finally {
+				if (osw != null) {
+					try {
+						osw.close();
+					} catch (IOException e) {
+						e.printStackTrace();                    
+					}
+				}
+			}
+			Log.i("Screen","Captured new screenShot.");
+
+			File f = new File("/storage/sdcard0/Pictures/screen.png");
+			while(!f.exists()){
 
 			}
-			is.close();
-			Log.w(getClass().getName(), "End of sending thread");
+			/*
+			int i = 0;
+			while(i > 100000000)
+				i++;
+				*/
+			
+			
+			try {
+				FileInputStream fis = new FileInputStream(f);
+				ByteArrayOutputStream os = new ByteArrayOutputStream();
+				int nb = fis.read(buffer);
+				fis.close();
+				
+				Log.i("Screen","Num bytes = " + nb);
+				
+				if(nb <= 10000000 && nb > 0){
+					write(buffer,0,nb);
+					f.delete();
+				}
 
-		} catch(Exception ex) {
-			ex.printStackTrace();
+			} catch (IOException e) {
+
+			}
 		}
-		 */
 		
+		/*
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		
 		while(true){
@@ -79,6 +118,7 @@ public class ScreenCaptureThread implements Runnable{
 				os.reset();
 			}
 		}
+		*/
 
 	}
 	

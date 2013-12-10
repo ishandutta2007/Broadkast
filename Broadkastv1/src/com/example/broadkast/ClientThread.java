@@ -89,9 +89,11 @@ public class ClientThread implements Runnable{
 							
 							byteOs.reset();
 							
-							byteOs.write(osBuff, 4, osSize - 4);
-							readingFile = true;
-							Log.i("WIFI","Filesize = "  + fileSize);
+							if(fileSize >= 0){
+								byteOs.write(osBuff, 4, osSize - 4);
+								readingFile = true;
+								Log.i("WIFI","Filesize = "  + fileSize);
+							}
 						}
 					}
 					

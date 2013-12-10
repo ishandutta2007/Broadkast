@@ -21,9 +21,7 @@ public class ClientUiThread extends Thread{
 	@Override
 	public void run() {
 		while(true){
-			while(System.currentTimeMillis() % 10 != 0){
-			}
-
+			
 			final Bitmap bm = getBitmap();
 
 			if(bm != null){
@@ -43,7 +41,7 @@ public class ClientUiThread extends Thread{
 		if(size == 5)
 			bitmap[oldest] = bm;
 		else{
-			bitmap[oldest + size] = bm;
+			bitmap[(oldest + size) % 5] = bm;
 			size++;
 		}
 	}
