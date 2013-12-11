@@ -47,19 +47,18 @@ public class WiFiDirect extends Activity implements ConnectionInfoListener {
 	private WifiP2pDnsSdServiceRequest serviceRequest;
 	private WifiP2pServiceInfo serviceInfo;
 
-
 	// Info about current connection/group
 	private WifiP2pDevice serviceDevice;
 	private WifiP2pInfo p2pInfo;
-	
+
 	private final WiFiDirect wifiDirect = this;
 
-	public void setList (WiFiDirectServicesList list){
+	public void setList(WiFiDirectServicesList list) {
 		servicesList = list;
 	}
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState){
+	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
@@ -70,9 +69,9 @@ public class WiFiDirect extends Activity implements ConnectionInfoListener {
 		intentFilter = new IntentFilter();
 		intentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
 		intentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
-		intentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
-		//intentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
-		
+		intentFilter
+				.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
+
 		manager.discoverPeers(channel, null);
 	}
 
@@ -94,17 +93,17 @@ public class WiFiDirect extends Activity implements ConnectionInfoListener {
 		stopCommunication();
 	}
 
-	/* Called by 'Viewers' to connect to serviceDevice. This serviceDevice is currently
-	 * just the most recently discovered device. Viewer should be able to select
-	 * devices from list somehow.
+	/*
+	 * Called by 'Viewers' to connect to serviceDevice. This serviceDevice is
+	 * currently just the most recently discovered device. Viewer should be able
+	 * to select devices from list somehow.
 	 */
-	public void connectToDevice(){
-		if(serviceDevice == null){
-			//printMessage("No devices have been found.");
+	public void connectToDevice() {
+		if (serviceDevice == null) {
 			return;
 		}
 
-		Log.i("WIFI","Connecting to device.");
+		Log.i("WIFI", "Connecting to device.");
 
 		WifiP2pConfig config = new WifiP2pConfig();
 		config.groupOwnerIntent = 0;
@@ -114,22 +113,21 @@ public class WiFiDirect extends Activity implements ConnectionInfoListener {
 			manager.removeServiceRequest(channel, serviceRequest,
 					new ActionListener() {
 
-				@Override
-				public void onSuccess() {
-					//
-				}
+						@Override
+						public void onSuccess() {
+							//
+						}
 
-				@Override
-				public void onFailure(int arg0) {
-					//
-				}
-			});
+						@Override
+						public void onFailure(int arg0) {
+							//
+						}
+					});
 
 		manager.connect(channel, config, new ActionListener() {
 
 			@Override
 			public void onSuccess() {
-				//printMessage("Connected to device successfully");
 			}
 
 			@Override
@@ -143,31 +141,17 @@ public class WiFiDirect extends Activity implements ConnectionInfoListener {
 	 * This function should be called by 'Broadcasters' so that other devices
 	 * can discover and connect to them.
 	 */
-	public void startRegistration(){
-		if(serviceInfo != null)
+	public void startRegistration() {
+		if (serviceInfo != null)
 			return;
 
 		Log.w(getClass().getName(), "Start Registration!");
 		Map<String, String> record = new HashMap<String, String>();
 		record.put("available", "visible");
 
-		/*
-		manager.createGroup(channel, new ActionListener() {
-
-			@Override
-			public void onSuccess() {
-				Log.w(getClass().getName(), "Created P2P Group");
-			}
-
-			@Override
-			public void onFailure(int error) {
-				Log.w(getClass().getName(), "Failed to create Group!");
-			}
-		});*/
-
 		WifiP2pDnsSdServiceInfo service = WifiP2pDnsSdServiceInfo.newInstance(
 				SERVICE_NAME, "_presence._tcp", record);
-		serviceInfo = service;		
+		serviceInfo = service;
 		manager.addLocalService(channel, service, new ActionListener() {
 
 			@Override
@@ -184,10 +168,11 @@ public class WiFiDirect extends Activity implements ConnectionInfoListener {
 
 	/*
 	 * Discovers services that have been registered by other devices. THis
-	 * function should be called by devices who want to be 'Viewers'. servListener
-	 * should add discover devices to a list so a 'Broadcaster' can be selected.
+	 * function should be called by devices who want to be 'Viewers'.
+	 * servListener should add discover devices to a list so a 'Broadcaster' can
+	 * be selected.
 	 */
-	public void discoverService(){
+	public void discoverService() {
 
 		/*
 		 * Register listeners for DNS-SD services. These are callbacks invoked
@@ -196,14 +181,11 @@ public class WiFiDirect extends Activity implements ConnectionInfoListener {
 
 		DnsSdServiceResponseListener servListener = new DnsSdServiceResponseListener() {
 			@Override
-			public void onDnsSdServiceAvailable(String instanceName, String registrationType,
-					WifiP2pDevice resourceType) {
-				if(instanceName.equalsIgnoreCase(SERVICE_NAME)){
+			public void onDnsSdServiceAvailable(String instanceName,
+					String registrationType, WifiP2pDevice resourceType) {
+				if (instanceName.equalsIgnoreCase(SERVICE_NAME)) {
 					// Add service
-					//EditText editText = (EditText) findViewById(R.id.edit_message);
-					//editText.setText(resourceType.deviceName + ":" + instanceName);
 					Log.w(getClass().getName(), "Discovered!");
-					//serviceDevice = resourceType;
 
 					if (servicesList != null) {
 						WiFiDevicesAdapter adapter = ((WiFiDevicesAdapter) servicesList
@@ -214,45 +196,43 @@ public class WiFiDirect extends Activity implements ConnectionInfoListener {
 						service.serviceRegistrationType = registrationType;
 						adapter.add(service);
 						adapter.notifyDataSetChanged();
-					}	
+					}
 				}
 			}
 		};
 
 		DnsSdTxtRecordListener txtListener = new DnsSdTxtRecordListener() {
 			@Override
-			/* Callback includes:
-			 * fullDomain: full domain name: e.g "printer._ipp._tcp.local."
-			 * record: TXT record dta as a map of key/value pairs.
-			 * device: The device running the advertised service.
+			/*
+			 * Callback includes: fullDomain: full domain name: e.g
+			 * "printer._ipp._tcp.local." record: TXT record dta as a map of
+			 * key/value pairs. device: The device running the advertised
+			 * service.
 			 */
-
-			public void onDnsSdTxtRecordAvailable(
-					String fullDomain, Map record, WifiP2pDevice device) {
-				//Log.i("WIFI", "DnsSdTxtRecord available -" + record.toString());
+			public void onDnsSdTxtRecordAvailable(String fullDomain,
+					Map record, WifiP2pDevice device) {
 			}
 		};
 
 		manager.setDnsSdResponseListeners(channel, servListener, txtListener);
 
-
 		// After attaching listeners, create a service request and initiate
 		// discovery.
 		manager.clearServiceRequests(channel, null);
-		
+
 		serviceRequest = WifiP2pDnsSdServiceRequest.newInstance();
 		manager.addServiceRequest(channel, serviceRequest,
 				new ActionListener() {
 
-			@Override
-			public void onSuccess() {
-			}
+					@Override
+					public void onSuccess() {
+					}
 
-			@Override
-			public void onFailure(int arg0) {
-				wifiDirect.discoverService();
-			}
-		});
+					@Override
+					public void onFailure(int arg0) {
+						wifiDirect.discoverService();
+					}
+				});
 		manager.discoverServices(channel, new ActionListener() {
 
 			@Override
@@ -275,23 +255,21 @@ public class WiFiDirect extends Activity implements ConnectionInfoListener {
 		Log.i("WIFI", "Connection Info Available");
 
 		// Check if thread has already been started
-		if(socketThread != null)
+		if (socketThread != null)
 			return;
-
-
 
 		// Create thread for socket communication
 		boolean ready = p2pInfo != null && p2pInfo.groupFormed;
 
-		if (ready && !p2pInfo.isGroupOwner){
+		if (ready && !p2pInfo.isGroupOwner) {
 			ImageView imgView = new ImageView(this);
 			setContentView(imgView);
-			socketThread = new Thread(new ClientThread(p2pInfo.groupOwnerAddress,this,imgView));
+			socketThread = new Thread(new ClientThread(
+					p2pInfo.groupOwnerAddress, this, imgView));
 			socketThread.start();
 			Log.i("WIFI", "Started Client");
-		}
-		else{
-			if (ready && p2pInfo.isGroupOwner){
+		} else {
+			if (ready && p2pInfo.isGroupOwner) {
 				// Create ServerThread
 				ServerThread serverThread = new ServerThread(this);
 				socketThread = new Thread(serverThread);
@@ -301,7 +279,8 @@ public class WiFiDirect extends Activity implements ConnectionInfoListener {
 				// Create ScreenCaptureThread
 				View v = this.getWindow().getDecorView().getRootView();
 				v.setDrawingCacheEnabled(true);
-				screenCaptureThread = new Thread(new ScreenCaptureThread(serverThread,v,this));
+				screenCaptureThread = new Thread(new ScreenCaptureThread(
+						serverThread));
 				screenCaptureThread.start();
 				Log.i("SCREEN CAPTURE", "Started screen capture thread");
 			}
@@ -309,12 +288,11 @@ public class WiFiDirect extends Activity implements ConnectionInfoListener {
 
 	}
 
-
-	public void setServiceDevice(WifiP2pDevice serviceDevice){
+	public void setServiceDevice(WifiP2pDevice serviceDevice) {
 		this.serviceDevice = serviceDevice;
 	}
 
-	public void stopCommunication(){
+	public void stopCommunication() {
 		manager.cancelConnect(channel, new ActionListener() {
 
 			@Override
@@ -327,31 +305,33 @@ public class WiFiDirect extends Activity implements ConnectionInfoListener {
 			}
 		});
 
-		if(serviceInfo != null)
-			manager.removeLocalService(channel, serviceInfo, new ActionListener() {
+		if (serviceInfo != null)
+			manager.removeLocalService(channel, serviceInfo,
+					new ActionListener() {
 
-				@Override
-				public void onSuccess() {
-				}
+						@Override
+						public void onSuccess() {
+						}
 
-				@Override
-				public void onFailure(int arg0) {
+						@Override
+						public void onFailure(int arg0) {
 
-				}
-			});
+						}
+					});
 
-		if(serviceRequest != null)
-			manager.removeServiceRequest(channel, serviceRequest, new ActionListener() {
+		if (serviceRequest != null)
+			manager.removeServiceRequest(channel, serviceRequest,
+					new ActionListener() {
 
-				@Override
-				public void onSuccess() {
-				}
+						@Override
+						public void onSuccess() {
+						}
 
-				@Override
-				public void onFailure(int arg0) {
+						@Override
+						public void onFailure(int arg0) {
 
-				}
-			});
+						}
+					});
 
 		manager.removeGroup(channel, new ActionListener() {
 
@@ -364,11 +344,9 @@ public class WiFiDirect extends Activity implements ConnectionInfoListener {
 
 			}
 		});
-		
 
 		this.p2pInfo = null;
 		this.serviceDevice = null;
 	}
 
-	
 }
