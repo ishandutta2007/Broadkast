@@ -9,30 +9,51 @@ import java.nio.ByteBuffer;
 
 import android.util.Log;
 
+/**
+ * This thread is responsible for capturing the screen and writing it the output
+ * streams of all currently connected sockets. Code for cleanly exiting this thread 
+ * should be added in later implementations.
+ *
+ */
 public class ScreenCaptureThread extends Thread {
 
+	// Reference to serverThread
 	private ServerThread serverThread;
 
+	/**
+	 * Creates a new ScreenCaptureThread.
+	 * 
+	 * @param serverThread Server thread from which output streams should be retreived
+	 */
 	public ScreenCaptureThread(ServerThread serverThread) {
 		this.serverThread = serverThread;
 	}
 
+	/**
+	 * Continuously takes screen shots and writes them to the currently 
+	 * available output streams.
+	 */
 	@Override
 	public void run() {
-
+		// Buffer to read screen caputre into
 		byte[] buffer = new byte[10000000];
 
+		// Command used to capture the screen
 		String cmd = new String(
 				"/system/bin/screencap -p /storage/sdcard0/Pictures/screen.png");
 
+		// Used to execute screen capture commmands
 		Runtime runtime = Runtime.getRuntime();
 		Process proc = null;
 		OutputStreamWriter osw = null;
 
+		// Take screen shots and write them to output streams
 		while (true) {
-			try { // Run Script
+			try {
+				// Run as super user so that screencap process can be called
 				proc = runtime.exec("su");
 				osw = new OutputStreamWriter(proc.getOutputStream());
+				// Write screencap command to OutputStreamWriter
 				osw.write(cmd);
 				osw.flush();
 				osw.close();
@@ -54,18 +75,21 @@ public class ScreenCaptureThread extends Thread {
 			}
 			Log.i("Screen", "Captured new screenShot.");
 
+			// Check for screen capture file to exist
 			File f = new File("/storage/sdcard0/Pictures/screen.png");
 			while (!f.exists()) {
 
 			}
 
 			try {
+				// Create input stream for screen capture
 				FileInputStream fis = new FileInputStream(f);
 				int nb = fis.read(buffer);
 				fis.close();
 
 				Log.i("Screen", "Num bytes = " + nb);
 
+				// Read input stream into buffer and write it to output streams
 				if (nb <= 10000000 && nb > 0) {
 					write(buffer, 0, nb);
 					f.delete();
@@ -77,12 +101,19 @@ public class ScreenCaptureThread extends Thread {
 		}
 	}
 
+	/**
+	 * Writes size of the buffer and the entire contents of buffer 
+	 * to socket output streams.
+	 * @param buff The buffer to be written to socket output streams
+	 */
 	public void write(byte[] buff) {
+		// Get output streams from serverThread
 		OutputStream[] oStreamArray = serverThread.getOSArray();
 		if (oStreamArray == null) {
 			return;
 		}
 
+		// Get 4 byte array containing the size of the buffer
 		for (OutputStream oStream : oStreamArray) {
 			try {
 				// Write size
@@ -98,14 +129,24 @@ public class ScreenCaptureThread extends Thread {
 		}
 	}
 
+	/**
+	 * Writes numBytes and the specified portion of buffer 
+	 * to socket output streams.
+	 * @param buff The buffer to be written to socket output streams
+	 * @param offset Index from buffer at which to start writing
+	 * @param numBytes Number of bytes to write from the buffer
+	 */
 	public void write(byte[] buff, int offset, int numBytes) {
+		// Get output streams from serverThread
 		OutputStream[] oStreamArray = serverThread.getOSArray();
 		if (oStreamArray == null) {
 			return;
 		}
-
+		
+		// Get 4 byte array containing the size of the buffer
 		byte[] bytes = ByteBuffer.allocate(4).putInt(numBytes).array();
 
+		// Write to each output stream
 		for (OutputStream oStream : oStreamArray) {
 			try {
 				// Write size

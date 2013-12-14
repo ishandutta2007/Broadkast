@@ -9,12 +9,26 @@ import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.net.wifi.p2p.WifiP2pManager.ConnectionInfoListener;
 import android.util.Log;
 
+/**
+ * This class is responsible for listening for changes in the WIFI_P2P state.
+ * It should handle these changes by itself or through WiFiDirect as appropriate.
+ * Further error handling should still be implemented in this class and in WiFiDirect.
+ *
+ */
 public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 
+	// Instances of objects created in WiFiDirect
 	private WifiP2pManager manager;
 	private Channel channel;
 	private WiFiDirect direct;
 
+	/**
+	 * Pass in instances of the objects created in WiFiDirect to the constructor.
+	 * 
+	 * @param manager
+	 * @param channel
+	 * @param direct
+	 */
 	public WiFiDirectBroadcastReceiver(WifiP2pManager manager, Channel channel,
 			WiFiDirect direct) {
 		super();
@@ -23,6 +37,10 @@ public class WiFiDirectBroadcastReceiver extends BroadcastReceiver {
 		this.direct = direct;
 	}
 
+	/**
+	 * Should handle intents as they are received. Most importantly, requesting
+	 * connection info when P2P connection has changed.
+	 */
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		Log.i("WIFI", "In onReceive of BroadcastReceiver");
