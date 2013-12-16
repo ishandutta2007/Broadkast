@@ -11,6 +11,11 @@ import android.view.Menu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/**
+ * The Menu page was mainly used for debugging and getting other info
+ * about the current phone being used
+ *
+ */
 public class MenuPage extends Activity {
 
 	@Override

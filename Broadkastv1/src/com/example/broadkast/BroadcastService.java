@@ -8,6 +8,11 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
+/**
+ * Broadcast Service is used to start this application as a background service
+ * The wifiDirect is initialized and starts running in the background
+ *
+ */
 public class BroadcastService extends Service {
 
 	private boolean iscasting = false;
@@ -16,7 +21,8 @@ public class BroadcastService extends Service {
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-
+		
+		//Initialize the wifi direct
 		wifid = KastPage.activity;
 		wifid.startRegistration();
 
@@ -35,6 +41,9 @@ public class BroadcastService extends Service {
 		return null;
 	}
 
+	/**
+	 * Sets up the background process notifies the user with notifications and toasts
+	 */
 	private void broadcast() {
 		if (!iscasting) {
 			Log.w(getClass().getName(), "Got to broadcast()!");
@@ -53,10 +62,14 @@ public class BroadcastService extends Service {
 					"Now Broadcasting screen", pi);
 			note.flags |= Notification.FLAG_NO_CLEAR;
 
+			//Starts the background service in foreground so it cannot be killed
 			startForeground(1337, note);
 		}
 	}
 
+	/**
+	 * Ends the service and notifies the user it has been ended
+	 */
 	private void stop() {
 		wifid.stopCommunication();
 		if (iscasting) {

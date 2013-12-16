@@ -45,6 +45,9 @@ public class WiFiDirectServicesList extends ListFragment {
 	}
 
 	@Override
+	/**
+	 * Connects to a broadcaster that has been clicked on
+	 */
 	public void onListItemClick(ListView l, View v, int position, long id) {
 
 		Log.i("WIFI", "List item clicked.");

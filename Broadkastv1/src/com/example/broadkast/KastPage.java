@@ -6,6 +6,13 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Toast;
 
+/**
+ * 
+ * The Activity for the broadcasting side of the app
+ * The User has the option to start sharing their screen then
+ * to stop it with the respective buttons
+ *
+ */
 public class KastPage extends WiFiDirect {
 
 	public static KastPage activity;
@@ -18,6 +25,10 @@ public class KastPage extends WiFiDirect {
 		activity = this;
 	}
 
+	/**
+	 * Starts the setup to broadcast your screen by calling the BroadcastService
+	 * @param v
+	 */
 	public void startBroadcast(View v) {
 		Toast.makeText(this, "Setting up WiFi Direct", Toast.LENGTH_LONG)
 				.show();
@@ -27,6 +38,10 @@ public class KastPage extends WiFiDirect {
 		startService(i);
 	}
 
+	/**
+	 * Ends the broadcast by stopping the background service
+	 * @param v
+	 */
 	public void stopBroadcast(View v) {
 		stopService(new Intent(this, BroadcastService.class));
 	}

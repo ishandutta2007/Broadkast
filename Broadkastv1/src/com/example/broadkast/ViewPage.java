@@ -3,7 +3,12 @@ package com.example.broadkast;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
-
+/**
+ * The Activity for the viewing side of the app
+ * The page is populated with broadcasters it detects on wifi direct
+ * The user can then click a broadcaster to view their screen
+ *
+ */
 public class ViewPage extends WiFiDirect {
 
 	public static Activity activity;
@@ -12,7 +17,7 @@ public class ViewPage extends WiFiDirect {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		//Setup the wifi direct and the list that will show the broadcasters
 		servicesList = new WiFiDirectServicesList();
 		getFragmentManager().beginTransaction()
 				.add(R.id.container_root, servicesList, "services").commit();

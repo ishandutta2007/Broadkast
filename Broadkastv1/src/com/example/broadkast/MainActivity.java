@@ -6,6 +6,13 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 
+/**
+ * 
+ * The main menu activity of the app
+ * The user clicks Kast if they want to broadcast their screen
+ * The user clicks View to see other's broadcasts
+ *
+ */
 public class MainActivity extends Activity {
 
 	@Override
@@ -15,6 +22,10 @@ public class MainActivity extends Activity {
 
 	}
 
+	/**
+	 * Goes the the kast page to let a user broadcast
+	 * @param view
+	 */
 	public void KastButton(View view) {
 
 		Intent myIntent = new Intent(MainActivity.this, KastPage.class);
@@ -22,12 +33,20 @@ public class MainActivity extends Activity {
 
 	}
 
+	/**
+	 * Goes to the menu page for debugging and other info
+	 * @param view
+	 */
 	public void MenuButton(View view) {
 
 		Intent myIntent = new Intent(MainActivity.this, MenuPage.class);
 		MainActivity.this.startActivity(myIntent);
 	}
 
+	/**
+	 * Goes to the view page to start viewing broadcasts
+	 * @param view
+	 */
 	public void ViewButton(View view) {
 
 		Intent myIntent = new Intent(MainActivity.this, ViewPage.class);

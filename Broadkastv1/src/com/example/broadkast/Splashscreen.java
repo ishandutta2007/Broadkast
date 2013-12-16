@@ -6,7 +6,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
-
+/**
+ * A splash screen to be shown when the app is opened
+ * 
+ *
+ */
 public class Splashscreen extends Activity {
 
 	private static String TAG = Splashscreen.class.getName();
