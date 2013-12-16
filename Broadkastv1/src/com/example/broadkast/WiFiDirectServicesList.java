@@ -1,3 +1,9 @@
+/**
+ * This class was taken from the WiFiDirectServiceDiscovery sample
+ * application provided through the Android SDK. It is used to 
+ * list broadcasting devices on the ViewPage of our application.
+ */
+
 package com.example.broadkast;
 
 import java.util.ArrayList;

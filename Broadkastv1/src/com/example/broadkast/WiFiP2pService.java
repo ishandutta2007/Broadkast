@@ -1,3 +1,8 @@
+/**
+ * This class was taken from the WiFiDirectServiceDiscovery sample
+ * application provided through the Android SDK. It is used to 
+ * hold information about broadcasting devices in our application.
+ */
 
 package com.example.broadkast;
 
